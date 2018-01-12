@@ -1,0 +1,19 @@
+###########################################################
+# Sometimes the Windows Task for automating Google Apps/Cloud Directory Sync fails, if you don't pay attention to your logs it could fail for days.
+# If you set this script up as a scheduled task it will check the LastTaskResult status, if it's not equal to a successful run it will execute
+# 
+###########################################################
+
+$GoogleTask = get-scheduledtask -TaskName 'Google Cloud Directory Sync' 
+$LastTaskResult = (($GoogleTask | Get-ScheduledTaskInfo).LastTaskResult)
+$State = $GoogleTask.State
+
+If (($LastTaskResult -ne '0') -and ($State -eq 'Ready'))
+{
+#This .lock file holds data stating the XML file is already in use.  Sometimes it does not clear the data and causes the automated task to fail.
+Rename-Item 'C:\<location>\syncState\*.lock' '*.old'
+#Add additional cleanup items as needed
+#
+#optional, re-run the task now or wait for the next scheduled time
+#Start-ScheduledTask -TaskName 'Google Cloud Directory Sync'
+}
