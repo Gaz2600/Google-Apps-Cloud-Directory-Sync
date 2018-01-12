@@ -1,0 +1,16 @@
+################################################
+# Copy Google Apps/Cloud Sync log to new location, add date to file name, delete original file.
+# Delete logs older then X days
+################################################
+
+$Date = Get-Date -Format yyyyMMdd
+$Source = "C:\<Location>\GADS_sync.log"
+$Destination = "E:\<Location>\Logs\$date-GADS_sync.log"
+
+Copy $Source $Destination
+Del $Source
+
+#Cleanup old files
+$Limit =(Get-Date).AddDays(-30)
+$Path = "E:\<Location>\Logs"
+Get-ChildItem -Path $Path -Recurse -Force | Where-Object {!$_.CreationTime -gt $Limit} | Remove-Item -Force
