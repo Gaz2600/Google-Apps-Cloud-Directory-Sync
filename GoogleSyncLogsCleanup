@@ -11,6 +11,6 @@ Copy $Source $Destination
 Del $Source
 
 #Cleanup old files
-$Limit =(Get-Date).AddDays(-30)
 $Path = "E:\<Location>\Logs"
-Get-ChildItem -Path $Path -Recurse -Force | Where-Object {!$_.CreationTime -gt $Limit} | Remove-Item -Force
+$date = (Get-Date).AddDays(-30)
+Get-ChildItem -path $Path | Where-Object {$_.LastWriteTime -le $date} | Remove-Item -Force
